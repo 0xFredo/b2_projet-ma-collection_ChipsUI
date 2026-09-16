@@ -14,7 +14,13 @@ pydantic
 powershell:
 
 admin: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-activer le venv: .\venv\Scripts\Activate.ps1
+
+activer le venv:
+
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
 
 mac:
 
