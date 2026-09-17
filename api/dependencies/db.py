@@ -1,0 +1,1 @@
+# Dépendance d'injection de session BDD

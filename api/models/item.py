@@ -1,0 +1,1 @@
+# Modèle SQLModel/SQLAlchemy pour le catalogue
