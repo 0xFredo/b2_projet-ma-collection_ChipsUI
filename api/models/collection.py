@@ -1,0 +1,1 @@
+# Modèle pour l'entrée de collection

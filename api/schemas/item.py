@@ -1,0 +1,1 @@
+# Schémas Pydantic (validation entrée/sortie)
