@@ -4,4 +4,10 @@ venv/
 __pycache__/
 *.pyc
 *.pyo
+
+# Configuration
 .env
+
+# Base de données SQLite locale (générée automatiquement sur chaque machine)
+*.db
+*.sqlite3

@@ -1,17 +1,18 @@
 Readme temporaire sur cette branche
 
+Crée le .env dans api/ :
+
+coller le contenu de .env.example dans le .env que vous avez crée dans le dossier api
+
 Lancer le serveur:
 
 uvicorn main:app --reload
 
 Dépendances à installer:
 
-fastapi
-uvicorn[standard]
-sqlalchemy
-pydantic
+pip install -r requirements.txt
 
-powershell:
+Powershell:
 
 admin: Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
