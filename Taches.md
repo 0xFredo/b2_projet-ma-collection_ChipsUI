@@ -2,7 +2,7 @@
 ✔️ Fredo
 ### **Phase 1 : Setup & Modèles de Données (Backend)**
 
-1. **Initialiser l'environnement et l'arborescence**
+1. **Initialiser l'environnement et l'arborescence** Flo ✅
     
     - Placer l'API dans le dossier `api/`. ✅
         
@@ -10,13 +10,13 @@
         
     - Configurer `core/config.py` pour charger les variables `.env` (ex: `SECRET_KEY`, `ALGORITHM`). ✅
         
-2. **Configurer la base de données (`db/database.py`)**
+2. **Configurer la base de données (`db/database.py`)** Fredo
     
     - Configurer le moteur SQLite asynchrone (`sqlite+aiosqlite://`).
         
     - Créer la fonction `get_db()` dans `dependencies/db.py` pour injecter la session BDD.
         
-3. **Créer les modèles SQLModel / SQLAlchemy (`models/`)**
+3. **Créer les modèles SQLModel / SQLAlchemy (`models/`)** Fredo
     
     - `User` : `id`, `email`, `hashed_password`, `role` (`user` ou `admin`), `created_at`.
         
@@ -24,16 +24,16 @@
         
     - `CollectionEntry` : `id`, `user_id`, `item_id`, `status` (`a_decouvrir`, `en_cours`, `termine`), `rating` (1-5), `comment`, `updated_at`.
         
-4. **Créer les schémas Pydantic (`schemas/`)**
+4. **Créer les schémas Pydantic (`schemas/`)** Flo ✅
     
     - Entrées/sorties pour l'authentification (`UserCreate`, `UserRead`, `Token`). ✅
         
-    - Validation des entrées/sorties pour `Item` et `CollectionEntry`.
+    - Validation des entrées/sorties pour `Item` et `CollectionEntry`. ✅
         
 
-### **Phase 2 : Sécurité, Authentification & Seed (Backend)**
+### **Phase 2 : Sécurité, Authentification & Seed (Backend)** Flo et / ou Fredo
 
-5. **Développer la sécurité (`core/security.py` & `dependencies/auth.py`)**
+5. **Développer la sécurité (`core/security.py` & `dependencies/auth.py`)** Flo ✅
     
     - Hachage des mots de passe avec `bcrypt`.
         
@@ -41,7 +41,7 @@
         
     - Dépendance `get_current_user` pour vérifier la validité du token sur les routes protégées.
         
-6. **Implémenter les routes `/auth/*` (`routers/auth.py`)**
+6. **Implémenter les routes `/auth/*` (`routers/auth.py`)** Flo
     
     - `POST /auth/register` : Création de compte.
         
@@ -49,12 +49,12 @@
         
     - `GET /auth/me` : Récupération du profil connecté.
         
-7. **Créer le script de peuplement (`db/seed.py`)**
+7. **Créer le script de peuplement (`db/seed.py`)** Flo ou Fredo à voir plus tard
     
     - Script permettant d'insérer au moins **40 éléments** dans la table `Item`.
         
 
-### **Phase 3 : Métier, Collection & Stats (Backend)**
+### **Phase 3 : Métier, Collection & Stats (Backend)** Flo et Fredo
 
 8. **Implémenter les routes du catalogue `/items/*` (`routers/items.py`)**
     
@@ -83,7 +83,7 @@
     - Configurer le middleware **CORS** pour autoriser le frontend React.
         
 
-### **Phase 4 : Frontend React & TypeScript**
+### **Phase 4 : Frontend React & TypeScript** Flo et Fredo
 
 11. **Setup React dans `web/`**
     
