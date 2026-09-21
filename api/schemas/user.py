@@ -1,4 +1,4 @@
-# Schémas Pydantic pour la validation des données Utilisateur.
+"""Schémas Pydantic pour la validation des données Utilisateur."""
 
 from pydantic import BaseModel, EmailStr
 
