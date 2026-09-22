@@ -11,3 +11,6 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     async with AsyncSessionLocal() as session:
         yield session
+
+
+get_session = get_db

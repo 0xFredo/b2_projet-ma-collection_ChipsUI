@@ -3,14 +3,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlmodel import Session, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel import select
 
 from core.config import settings
 from core.security import create_access_token, get_password_hash, verify_password
 from dependencies.auth import get_current_user
 from dependencies.db import get_session
 from models.user import User
-from schemas.user import UserCreate, UserPublic, Token
+from schemas.user import UserCreate, UserRead, Token
 
 # Initialisation du routeur dédié à l'authentification
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -18,14 +19,14 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post(
     "/register", 
-    response_model=UserPublic, 
+    response_model=UserRead, 
     status_code=status.HTTP_201_CREATED,
     summary="Inscription d'un nouvel utilisateur",
     response_description="L'utilisateur créé sans ses données sensibles."
 )
-def register(
+async def register(
     user_data: UserCreate,
-    session: Annotated[Session, Depends(get_session)]
+    session: Annotated[AsyncSession, Depends(get_session)]
 ):
     """
     Inscrit un nouvel utilisateur dans le système.
@@ -43,7 +44,8 @@ def register(
     - `400 BAD REQUEST` : Si l'adresse e-mail est déjà associée à un compte.
     """
     # 1. Vérification de l'existence préalable de l'utilisateur
-    existing_user = session.exec(select(User).where(User.email == user_data.email)).first()
+    result = await session.execute(select(User).where(User.email == user_data.email))
+    existing_user = result.scalars().first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -62,8 +64,8 @@ def register(
     
     # 4. Sauvegarde en base de données
     session.add(db_user)
-    session.commit()
-    session.refresh(db_user)
+    await session.commit()
+    await session.refresh(db_user)
 
     return db_user
 
@@ -74,9 +76,9 @@ def register(
     summary="Connexion et génération du token JWT",
     response_description="Le jeton d'accès JWT et son type (Bearer)."
 )
-def login(
+async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    session: Annotated[Session, Depends(get_session)]
+    session: Annotated[AsyncSession, Depends(get_session)]
 ):
     """
     Authentifie l'utilisateur via ses identifiants OAuth2.
@@ -94,7 +96,8 @@ def login(
     - `401 UNAUTHORIZED` : Si l'e-mail n'existe pas ou si le mot de passe est incorrect.
     """
     # 1. Recherche de l'utilisateur par e-mail (champ 'username' du formulaire OAuth2)
-    user = session.exec(select(User).where(User.email == form_data.username)).first()
+    result = await session.execute(select(User).where(User.email == form_data.username))
+    user = result.scalars().first()
     
     # 2. Contrôle de sécurité : existence et vérification du mot de passe
     if not user or not verify_password(form_data.password, user.hashed_password):
@@ -118,7 +121,7 @@ def login(
 
 @router.get(
     "/me", 
-    response_model=UserPublic,
+    response_model=UserRead,
     summary="Récupération du profil de l'utilisateur connecté",
     response_description="Les informations publiques du compte authentifié."
 )
