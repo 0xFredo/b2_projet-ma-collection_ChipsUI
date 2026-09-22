@@ -1,8 +1,9 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import TYPE_CHECKING, Optional, List
 from sqlmodel import SQLModel, Field, Relationship
 
-from models.collection import CollectionEntry
+if TYPE_CHECKING:
+    from models.collection import CollectionEntry
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

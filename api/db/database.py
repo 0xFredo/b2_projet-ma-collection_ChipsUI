@@ -1,6 +1,6 @@
 # Connexion aiosqlite / SQLAlchemy async
 
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlmodel import SQLModel
 from core.config import settings
 
@@ -16,7 +16,7 @@ engine = create_async_engine(
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     expire_on_commit=False,
-    class_="" # Laisse par défaut ou gère via SQLModel
+    class_=AsyncSession,
 )
 
 async def init_db():
