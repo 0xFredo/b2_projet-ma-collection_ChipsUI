@@ -11,3 +11,6 @@ __pycache__/
 # Base de données SQLite locale (générée automatiquement sur chaque machine)
 *.db
 *.sqlite3
+
+# macOS
+.DS_Store
