@@ -1,13 +1,17 @@
-# Script de peuplement (test avec 1 item)
+"""
+Script d'initialisation et de peuplement de la base de données.
+Permet d'insérer les éléments du catalogue de manière idempotente (anti-doublon).
+"""
+
 import asyncio
 from sqlmodel import select
 
 from db.database import AsyncSessionLocal, init_db
 from models.item import Item
-from models.collection import CollectionEntry  # <-- OBLIGATOIRE pour charger la relation
-from models.user import User                   # <-- OBLIGATOIRE pour charger la relation
+from models.collection import CollectionEntry  # Imports nécessaires pour la résolution
+from models.user import User  # des relations SQLModel / SQLAlchemy (noqa: F401)
 
-# Remplacez / complétez ce tableau dès que vous avez choisi votre univers !
+# Tableau de données du catalogue (à remplacer/compléter selon l'univers choisi)
 ITEMS_DATA = [
     {
         "titre": "Item de Test 1",
@@ -20,28 +24,37 @@ ITEMS_DATA = [
 ]
 
 
-async def seed_database():
+async def seed_database() -> None:
+    """
+    Initialise les tables en base de données et insère les données de test
+    si elles n'existent pas déjà (évite les doublons lors des re-exécutions).
+    """
+    # Création des tables si elles n'existent pas
     await init_db()
 
     async with AsyncSessionLocal() as session:
-        print("🌱 Début du peuplement de la base de données...")
-        
+        print("Début du peuplement de la base de données...")
+
         added_count = 0
         for data in ITEMS_DATA:
+            # Vérification de l'existence de l'élément par son titre
             statement = select(Item).where(Item.titre == data["titre"])
             result = await session.execute(statement)
             existing_item = result.scalar_one_or_none()
-            
+
+            # Insertion uniquement si l'item n'existe pas en base
             if not existing_item:
                 new_item = Item(**data)
                 session.add(new_item)
                 added_count += 1
-                print(f"➕ Ajout : {data['titre']}")
+                print(f"Ajout : {data['titre']}")
             else:
-                print(f"⏩ Déjà présent : {data['titre']}")
-                
+                print(f"Déjà présent : {data['titre']}")
+
+        # Validation de la transaction
         await session.commit()
-        print(f"✅ Peuplement terminé ! ({added_count} éléments ajoutés)")
+        print(f"Peuplement terminé ! ({added_count} éléments ajoutés)")
+
 
 if __name__ == "__main__":
     asyncio.run(seed_database())

@@ -1,11 +1,11 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-# Charger tous les modèles en mémoire pour résoudre les relations SQLAlchemy
 import models.user
 import models.item
 import models.collection
 
-from routers import auth
+from routers import auth, items, collection
 
 app = FastAPI(
     title="API Projet Collaborative",
@@ -13,8 +13,17 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Liaison du routeur au serveur
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(auth.router)
+app.include_router(items.router)
+app.include_router(collection.router)
 
 @app.get("/")
 def read_root():
