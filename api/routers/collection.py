@@ -1,4 +1,3 @@
-# Routes /me/*
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlmodel import select
@@ -20,7 +19,7 @@ from schemas.collection import (
 router = APIRouter(prefix="/me", tags=["Collection Personnelle"])
 
 
-@router.get("/collection", response_model=list[CollectionEntryRead])
+@router.get("/collection", response_model=list[CollectionEntryRead], summary="Récupérer sa collection")
 async def get_my_collection(
     statut: Optional[str] = Query(default=None, description="Filtrer par statut (a_decouvrir, en_cours, termine)"),
     tri: Optional[str] = Query(default=None, description="Tri par 'date' ou 'note'"),
@@ -28,7 +27,7 @@ async def get_my_collection(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Récupère la collection personnelle de l'utilisateur connecté avec filtres et tri.
+    Récupère la collection de l'utilisateur connecté avec filtres et tri optionnels.
     """
     statement = (
         select(CollectionEntry)
@@ -48,7 +47,12 @@ async def get_my_collection(
     return result.scalars().all()
 
 
-@router.post("/collection", response_model=CollectionEntryRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/collection",
+    response_model=CollectionEntryRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="Ajouter un item à sa collection"
+)
 async def add_to_collection(
     entry_data: CollectionEntryCreate,
     session: AsyncSession = Depends(get_session),
@@ -57,7 +61,7 @@ async def add_to_collection(
     """
     Ajoute un élément du catalogue à la collection de l'utilisateur.
     """
-    # 1. Vérifier si l'item existe dans le catalogue
+    # 1. Vérifier si l'item existe
     item_stmt = select(Item).where(Item.id == entry_data.item_id)
     item_res = await session.execute(item_stmt)
     item = item_res.scalar_one_or_none()
@@ -65,7 +69,7 @@ async def add_to_collection(
     if not item:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"erreur": {"code": 404, "message": "Item inexistant dans le catalogue"}}
+            detail="Item inexistant dans le catalogue"
         )
 
     # 2. Vérifier si l'item est déjà présent (409 Conflict)
@@ -77,10 +81,10 @@ async def add_to_collection(
     if existing_res.scalar_one_or_none():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail={"erreur": {"code": 409, "message": "Élément déjà présent dans la collection"}}
+            detail="Cet élément est déjà présent dans votre collection"
         )
 
-    # 3. Création de l'entrée
+    # 3. Création
     new_entry = CollectionEntry(
         user_id=current_user.id,
         item_id=entry_data.item_id,
@@ -92,7 +96,6 @@ async def add_to_collection(
     session.add(new_entry)
     await session.commit()
 
-    # Charger la relation item pour la réponse
     res_stmt = (
         select(CollectionEntry)
         .where(CollectionEntry.id == new_entry.id)
@@ -102,7 +105,7 @@ async def add_to_collection(
     return res.scalar_one()
 
 
-@router.patch("/collection/{entry_id}", response_model=CollectionEntryRead)
+@router.patch("/collection/{entry_id}", response_model=CollectionEntryRead, summary="Modifier une entrée")
 async def update_collection_entry(
     entry_id: int,
     update_data: CollectionEntryUpdate,
@@ -110,7 +113,7 @@ async def update_collection_entry(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Met à jour une entrée de la collection (statut, note, commentaire).
+    Met à jour le statut, la note ou le commentaire d'un élément de sa collection.
     """
     statement = (
         select(CollectionEntry)
@@ -123,7 +126,7 @@ async def update_collection_entry(
     if not entry:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"erreur": {"code": 404, "message": "Entrée de collection introuvable"}}
+            detail="Entrée de collection introuvable"
         )
 
     data_dict = update_data.model_dump(exclude_unset=True)
@@ -136,14 +139,14 @@ async def update_collection_entry(
     return entry
 
 
-@router.delete("/collection/{entry_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/collection/{entry_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Supprimer une entrée")
 async def delete_collection_entry(
     entry_id: int,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
-    Supprime un élément de la collection.
+    Supprime un élément de sa collection personnelle.
     """
     statement = select(CollectionEntry).where(
         CollectionEntry.id == entry_id,
@@ -155,7 +158,7 @@ async def delete_collection_entry(
     if not entry:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"erreur": {"code": 404, "message": "Entrée de collection introuvable"}}
+            detail="Entrée de collection introuvable"
         )
 
     await session.delete(entry)
@@ -163,13 +166,13 @@ async def delete_collection_entry(
     return None
 
 
-@router.get("/stats", response_model=StatsResponse)
+@router.get("/stats", response_model=StatsResponse, summary="Statistiques de la collection")
 async def get_my_stats(
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
-    Renvoie le résumé des statistiques personnelles de l'utilisateur.
+    Renvoie le total, la répartition par statut et la note moyenne de la collection.
     """
     statement = select(CollectionEntry).where(CollectionEntry.user_id == current_user.id)
     result = await session.execute(statement)

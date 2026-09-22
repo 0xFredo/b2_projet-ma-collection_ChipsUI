@@ -48,9 +48,9 @@ async def register(
     existing_user = result.scalars().first()
     if existing_user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Un compte existe déjà avec cet email."
-        )
+        status_code=status.HTTP_409_CONFLICT,  # <-- Remplace 400 par 409 ici
+        detail="Cet email est déjà utilisé."
+    )
 
     # 2. Hachage sécurisé du mot de passe avant persistance
     hashed_password = get_password_hash(user_data.password)
