@@ -1,4 +1,4 @@
-# Modèle SQLModel/SQLAlchemy pour le catalogue
+# Modèle SQLModel pour le catalogue (Livres / Recettes / Jeux)
 
 from typing import TYPE_CHECKING, Optional, List
 from sqlmodel import SQLModel, Field, Relationship
@@ -8,14 +8,17 @@ if TYPE_CHECKING:
 
 class Item(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    title: str = Field(index=True)
+    titre: str = Field(index=True)
     description: str
-    category: str = Field(index=True)
+    categorie: str = Field(index=True)
     image_url: str
     
-    # 1 à 2 champs spécifiques à ton univers (ex: Livre)
-    author: str
-    year: int
+    # Champs spécifiques à l'univers choisi (ex: Livres)
+    auteur: str
+    annee: int
 
     # Relation vers les entrées de collection
-    collection_entries: List["CollectionEntry"] = Relationship(back_populates="item", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
+    collection_entries: List["CollectionEntry"] = Relationship(
+        back_populates="item", 
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+    )

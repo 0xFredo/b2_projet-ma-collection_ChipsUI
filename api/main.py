@@ -1,5 +1,11 @@
 from fastapi import FastAPI
-from routers import auth  # Import de ton routeur
+
+# Charger tous les modèles en mémoire pour résoudre les relations SQLAlchemy
+import models.user
+import models.item
+import models.collection
+
+from routers import auth
 
 app = FastAPI(
     title="API Projet Collaborative",
