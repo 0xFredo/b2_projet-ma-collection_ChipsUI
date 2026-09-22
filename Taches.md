@@ -1,6 +1,6 @@
 ✅ Florentin
 ✔️ Fredo
-### **Phase 1 : Setup & Modèles de Données (Backend)**
+### **Phase 1 : Setup & Modèles de Données (Backend)** ✅✅✅✅✅✅✅✅
 
 1. **Initialiser l'environnement et l'arborescence** Flo ✅
     
@@ -10,19 +10,19 @@
         
     - Configurer `core/config.py` pour charger les variables `.env` (ex: `SECRET_KEY`, `ALGORITHM`). ✅
         
-2. **Configurer la base de données (`db/database.py`)** Fredo
+2. **Configurer la base de données (`db/database.py`)** Fredo ✔️
     
-    - Configurer le moteur SQLite asynchrone (`sqlite+aiosqlite://`).
+    - Configurer le moteur SQLite asynchrone (`sqlite+aiosqlite://`). ✔️
         
-    - Créer la fonction `get_db()` dans `dependencies/db.py` pour injecter la session BDD.
+    - Créer la fonction `get_db()` dans `dependencies/db.py` pour injecter la session BDD. ✔️
         
-3. **Créer les modèles SQLModel / SQLAlchemy (`models/`)** Fredo
+3. **Créer les modèles SQLModel / SQLAlchemy (`models/`)** Fredo ✔️
     
-    - `User` : `id`, `email`, `hashed_password`, `role` (`user` ou `admin`), `created_at`.
+    - `User` : `id`, `email`, `hashed_password`, `role` (`user` ou `admin`), `created_at`. ✔️
         
-    - `Item` : `id`, `title`, `description`, `category`, `image_url` + **1 à 2 champs spécifiques** à ton univers.
+    - `Item` : `id`, `title`, `description`, `category`, `image_url` + **1 à 2 champs spécifiques** à ton univers. ✔️
         
-    - `CollectionEntry` : `id`, `user_id`, `item_id`, `status` (`a_decouvrir`, `en_cours`, `termine`), `rating` (1-5), `comment`, `updated_at`.
+    - `CollectionEntry` : `id`, `user_id`, `item_id`, `status` (`a_decouvrir`, `en_cours`, `termine`), `rating` (1-5), `comment`, `updated_at`. ✔️
         
 4. **Créer les schémas Pydantic (`schemas/`)** Flo ✅
     
