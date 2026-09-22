@@ -6,11 +6,11 @@ coller le contenu de .env.example dans le .env que vous avez crée dans le dossi
 
 Lancer le serveur:
 
-uvicorn main:app --reload
+python -m uvicorn main:app --reload
 
 Dépendances à installer:
 
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 
 Powershell:
 

@@ -1,6 +1,6 @@
 """Schémas Pydantic pour la validation des données Utilisateur."""
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 # Données communes à tous les schémas utilisateur
@@ -17,9 +17,7 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: int
     is_admin: bool = False
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Schéma pour la réponse du Token JWT (POST /auth/login)
