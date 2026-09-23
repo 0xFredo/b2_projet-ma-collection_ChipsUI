@@ -9,8 +9,10 @@ class ItemBase(BaseModel):
     description: str
     image_url: str | None = "" # Optionel
     annee: int
-    auteur: str  # Champ spécifique univers Livres temporaire
-
+    # 2 champs propres à l'univers
+    saveur: str
+    marque: str
+    
 # Données renvoyées par l'API pour un Item individuel (GET /items/{id})
 class ItemRead(ItemBase):
     id: int

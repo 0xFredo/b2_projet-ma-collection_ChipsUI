@@ -13,9 +13,9 @@ class Item(SQLModel, table=True):
     categorie: str = Field(index=True)
     image_url: str
     
-    # Champs spécifiques à l'univers choisi (ex: Livres)
-    auteur: str
-    annee: int
+    # 2 champs propres à l'univers
+    saveur: str
+    marque: str
 
     # Relation vers les entrées de collection
     collection_entries: List["CollectionEntry"] = Relationship(
