@@ -11,6 +11,7 @@ class Item(SQLModel, table=True):
     titre: str = Field(index=True)
     description: str
     categorie: str = Field(index=True)
+    annee: int
     image_url: str
     
     # 2 champs propres à l'univers

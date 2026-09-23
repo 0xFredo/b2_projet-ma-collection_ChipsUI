@@ -31,7 +31,8 @@ async def get_items(
             or_(
                 Item.titre.ilike(search_pattern),
                 Item.description.ilike(search_pattern),
-                Item.auteur.ilike(search_pattern)
+                Item.marque.ilike(search_pattern),
+                Item.saveur.ilike(search_pattern)
             )
         )
 
@@ -74,7 +75,8 @@ async def get_item_by_id(
     if not item:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"erreur": {"code": 404, "message": f"Item {item_id} introuvable"}}
+            # detail={"erreur": {"code": 404, "message": f"Item {item_id} introuvable"}}
+            detail=f"Item {item_id} introuvable"
         )
 
     return item
