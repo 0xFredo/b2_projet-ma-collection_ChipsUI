@@ -10,6 +10,7 @@ from db.database import AsyncSessionLocal, init_db
 from models.item import Item
 from models.collection import CollectionEntry  # Imports nécessaires pour la résolution
 from models.user import User  # des relations SQLModel / SQLAlchemy (noqa: F401)
+from core.security import get_password_hash
 
 # Tableau de données du catalogue (à remplacer/compléter selon l'univers choisi)
 ITEMS_DATA = [
@@ -89,6 +90,21 @@ async def seed_database() -> None:
                 print(f"Ajout : {data['titre']}")
             else:
                 print(f"Déjà présent : {data['titre']}")
+
+        # 2. Création du compte de test (optionnel mais pratique)
+        test_email = "test@example.com"
+        stmt_user = select(User).where(User.email == test_email)
+        existing_user = (await session.execute(stmt_user)).scalar_one_or_none()
+
+        if not existing_user:
+            demo_user = User(
+                email=test_email,
+                hashed_password=get_password_hash("password123"),
+            )
+            session.add(demo_user)
+            print(f"Utilisateur de test créé : {test_email}")
+        else:
+            print(f"Utilisateur déjà présent : {test_email}")
 
         # Validation de la transaction
         await session.commit()
