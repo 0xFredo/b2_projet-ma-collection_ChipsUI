@@ -2,13 +2,22 @@
 
 import './styles.css'
 
-function Routes() {
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Catalog from './pages/Catalog';
+import Collection from './pages/Collection';
+import Stats from './pages/Stats';
+import ProtectedRoute from './components/ProtectedRoute';
+
+export default function AppRoutes() {
   return (
-    <>
-      <h1>Welcome to ChipsUI</h1>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<h1>Catalogue</h1>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default Routes
