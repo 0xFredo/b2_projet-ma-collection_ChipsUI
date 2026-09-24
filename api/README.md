@@ -1,6 +1,6 @@
 # Readme Backend
 
-Suivre les étapes dans l'ordre pour lancer l'API en local.
+Suivre les étapes dans l'ordre pour lancer l'API en local depuis la racine du projet.
 
 ---
 
@@ -23,6 +23,12 @@ pip install -r api/requirements.txt
 2. Copie le contenu de `api/.env.example` dans ton `.env`.
 
 3. Renseigne une clé secrète dans le champ `SECRET_KEY`.
+
+OU executer depuis le dossier api/ : 
+```
+cd api
+python -m make_env
+```
 
 ### 3. Lancer la base de données PostgreSQL (Docker)
 
