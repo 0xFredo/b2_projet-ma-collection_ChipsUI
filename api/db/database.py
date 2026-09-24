@@ -1,15 +1,14 @@
-# Connexion aiosqlite / SQLAlchemy async
+# Connexion PostgreSQL / SQLAlchemy async
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlmodel import SQLModel
 from core.config import settings
 
-# Utilisation de l'URL définie dans config.py (qui lit le .env)
+# Configuration du moteur pour PostgreSQL (sans connect_args SQLite)
 engine = create_async_engine(
     settings.DATABASE_URL, 
     echo=True, 
-    future=True,
-    connect_args={"check_same_thread": False}  # Obligatoire pour SQLite en async
+    future=True
 )
 
 # Fabrique de sessions asynchrones
@@ -20,8 +19,8 @@ AsyncSessionLocal = async_sessionmaker(
 )
 
 async def init_db():
-    """Crée les tables dans la base de données au démarrage."""
-    # On importe les modèles ici pour que SQLModel enregistre les tables
+    """Crée les tables dans PostgreSQL au démarrage."""
+    # On importe les modèles pour que SQLModel enregistre les tables
     import models.user
     import models.item
     import models.collection
