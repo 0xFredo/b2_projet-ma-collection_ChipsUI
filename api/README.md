@@ -13,7 +13,7 @@ Suivre les étapes dans l'ordre pour lancer l'API en local.
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r api/requirements.txt
 ```
 
 ### 2. Configurer les variables d'environnement
@@ -56,14 +56,18 @@ L'API et la documentation Swagger seront accessibles sur : `http://localhost:800
 
 **Relancer le conteneur Docker après un redémarrage PC :**
 
-
-
 ``` PowerShell
 docker start postgres-chips
+```
+
+**Supprimer le conteneur :**
+
+``` PowerShell
+docker rm -f postgres-chips
 ```
 
 **Mise à jour des dépendances (à exécuter à la racine du projet) :**
 
 ``` PowerShell
-pip freeze > requirements.txt
+pip freeze > api/requirements.txt
 ```
