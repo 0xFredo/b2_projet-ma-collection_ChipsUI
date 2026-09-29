@@ -21,6 +21,8 @@ export interface Item {
   description: string;
   annee: number;
   image_url: string;
+  saveur?: string;
+  marque?: string;
   [key: string]: unknown; // Pour accepter d'autres champs specifiques sans utiliser 'any'
 }
 
