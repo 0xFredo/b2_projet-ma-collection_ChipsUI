@@ -23,7 +23,7 @@ function estErreurApi(valeur: unknown): valeur is ApiErrorResponse {
 async function requete<T>(chemin: string, options: RequestInit = {}): Promise<T> {
 	const token = window.localStorage.getItem('token')
 	const entetes = new Headers(options.headers)
-	entetes.set('Content-Type', 'application/json')
+	if (options.body && !(options.body instanceof URLSearchParams)) entetes.set('Content-Type', 'application/json')
 	if (token) entetes.set('Authorization', `Bearer ${token}`)
 
 	const reponse = await fetch(`${BASE_URL}${chemin}`, { ...options, headers: entetes })
@@ -38,7 +38,10 @@ async function requete<T>(chemin: string, options: RequestInit = {}): Promise<T>
 
 export const api = {
 	inscrire: (donnees: { email: string; password: string }) => requete<User>('/auth/register', { method: 'POST', body: JSON.stringify(donnees) }),
-	connecter: (donnees: { email: string; password: string }) => requete<AuthResponse>('/auth/login', { method: 'POST', body: JSON.stringify(donnees) }),
+	connecter: (donnees: { email: string; password: string }) => {
+		const formulaire = new URLSearchParams({ username: donnees.email, password: donnees.password })
+		return requete<AuthResponse>('/auth/login', { method: 'POST', body: formulaire })
+	},
 	utilisateurCourant: () => requete<User>('/auth/me'),
 	listerItems: (parametres: { q?: string; categorie?: string; page?: number; limit?: number }) => {
 		const recherche = new URLSearchParams()
