@@ -12,12 +12,16 @@ Bienvenue dans ChipsUI, votre nouvelle inerface préférée dédiée à votre co
 
 ## Configuration
 
-Windows : exécutez `setup_windows.cmd`
+**Exécutez le script correspondant à votre système pour configurer ChipsUI.**
 
-macOS : exécutez `setup_mac.sh`
+***Windows*** : `setup_windows.cmd`
+
+***macOS*** : `setup_mac.sh`
 
 ## Exécution
 
-Windows : exécutez `launch_windows.cmd`
+**Exécutez le script correspondant à votre système pour lancer le site.**
 
-macOS : exécutez `launch_mac.sh`
+***Windows*** : `launch_windows.cmd`
+
+***macOS*** : `launch_mac.sh`

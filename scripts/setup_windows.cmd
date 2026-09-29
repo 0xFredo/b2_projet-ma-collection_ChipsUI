@@ -1,5 +1,3 @@
-@echo off
-
 echo Étape 1/7 (Python, environnement) — Initialisation...
 python -m venv venv
 call venv\Scripts\activate.bat
