@@ -24,7 +24,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 	useEffect(() => {
 		if (!token) return
-		api.utilisateurCourant().then(definirUtilisateur).catch(() => { definirToken(null); definirUtilisateur(null) }).finally(() => definirChargement(false))
+		let verificationActive = true
+		const tokenVerifie = token
+		api.utilisateurCourant().then(utilisateur => {
+			if (verificationActive) definirUtilisateur(utilisateur)
+		}).catch(() => {
+			if (verificationActive && window.localStorage.getItem('token') === JSON.stringify(tokenVerifie)) {
+				definirToken(null); definirUtilisateur(null)
+			}
+		}).finally(() => {
+			if (verificationActive) definirChargement(false)
+		})
+		return () => { verificationActive = false }
 	}, [token, definirToken])
 
 	const connexion = async (email: string, motDePasse: string) => {

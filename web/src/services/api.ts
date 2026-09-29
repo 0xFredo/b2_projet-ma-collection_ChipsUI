@@ -21,7 +21,14 @@ function estErreurApi(valeur: unknown): valeur is ApiErrorResponse {
 }
 
 async function requete<T>(chemin: string, options: RequestInit = {}): Promise<T> {
-	const token = window.localStorage.getItem('token')
+	const tokenStocke = window.localStorage.getItem('token')
+	let token: string | null = null
+	if (tokenStocke && tokenStocke !== 'null') {
+		try {
+			const valeur: unknown = JSON.parse(tokenStocke)
+			token = typeof valeur === 'string' ? valeur : null
+		} catch { token = tokenStocke }
+	}
 	const entetes = new Headers(options.headers)
 	if (options.body && !(options.body instanceof URLSearchParams)) entetes.set('Content-Type', 'application/json')
 	if (token) entetes.set('Authorization', `Bearer ${token}`)
