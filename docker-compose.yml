@@ -1,0 +1,32 @@
+services:
+  # 1. Service Backend FastAPI
+  api:
+    build: ./api
+    container_name: ma_collection_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./api/.env
+    environment:
+      # Surcharge localhost par host.docker.internal pour cibler le conteneur postgres-chips de ta machine Windows
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@host.docker.internal:5432/chips_db
+    volumes:
+      - ./api:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  # 2. Service Frontend React (Vite)
+  web:
+    build: ./web
+    container_name: ma_collection_web
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    restart: unless-stopped

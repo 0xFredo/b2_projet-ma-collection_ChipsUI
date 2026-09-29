@@ -8,8 +8,8 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str = "API Collection"
 
-    # Base de données SQLite asynchrone (SQLModel + aiosqlite)
-    DATABASE_URL: str = "sqlite+aiosqlite:///./app.db"
+    # Base de données postgre
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/chips_db"
 
     # Sécurité & JWT (HS256)
     SECRET_KEY: str = "CHANGE_ME_IN_PRODUCTION_SECRET_KEY_123456789"
