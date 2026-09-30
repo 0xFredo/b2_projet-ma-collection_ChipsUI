@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 
 import models.user
 import models.item
@@ -38,6 +39,22 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
             "erreur": {
                 "code": exc.status_code,
                 "message": str(exc.detail)
+            }
+        }
+    )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    # On extrait le ou les messages d'erreur de Pydantic
+    errors = exc.errors()
+    message = errors[0].get("msg") if errors else "Données de requête invalides"
+    
+    return JSONResponse(
+        status_code=422,
+        content={
+            "erreur": {
+                "code": 422,
+                "message": message
             }
         }
     )
