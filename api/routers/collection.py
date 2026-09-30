@@ -3,6 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlmodel import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import func
+from sqlmodel import select
 
 from dependencies.db import get_session
 from dependencies.auth import get_current_user
@@ -174,21 +176,31 @@ async def get_my_stats(
     """
     Renvoie le total, la répartition par statut et la note moyenne de la collection.
     """
-    statement = select(CollectionEntry).where(CollectionEntry.user_id == current_user.id)
-    result = await session.execute(statement)
-    entries = result.scalars().all()
+    # 1. Requête pour le total global et la note moyenne
+    query_aggregates = select(
+        func.count(CollectionEntry.id),
+        func.avg(CollectionEntry.note)
+    ).where(CollectionEntry.user_id == current_user.id)
+    
+    res_agg = await session.execute(query_aggregates)
+    total, note_moyenne_raw = res_agg.one()
 
-    total = len(entries)
+    # 2. Requête pour la répartition par statut (GROUP BY)
+    query_status = select(
+        CollectionEntry.statut,
+        func.count(CollectionEntry.id)
+    ).where(CollectionEntry.user_id == current_user.id).group_by(CollectionEntry.statut)
+    
+    res_status = await session.execute(query_status)
+    
+    # Structure par défaut pour garantir la présence de tous les statuts
     par_statut = {"a_decouvrir": 0, "en_cours": 0, "termine": 0}
-    notes = []
+    for statut, count in res_status.all():
+        if statut in par_statut:
+            par_statut[statut] = count
 
-    for e in entries:
-        if e.statut in par_statut:
-            par_statut[e.statut] += 1
-        if e.note is not None:
-            notes.append(e.note)
-
-    note_moyenne = round(sum(notes) / len(notes), 2) if notes else None
+    # Formatage de la moyenne
+    note_moyenne = round(float(note_moyenne_raw), 2) if note_moyenne_raw is not None else None
 
     return StatsResponse(
         total=total,
