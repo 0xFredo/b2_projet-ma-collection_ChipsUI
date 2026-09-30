@@ -6,7 +6,7 @@ import models.user
 import models.item
 import models.collection
 
-from routers import auth, items, collection
+from routers import root, auth, items, collection
 
 app = FastAPI(
     title="API Projet Collaborative",
@@ -42,12 +42,7 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
         }
     )
 
-
+app.include_router(root.router)
 app.include_router(auth.router)
 app.include_router(items.router)
 app.include_router(collection.router)
-
-
-@app.get("/", include_in_schema=False)
-def read_root():
-    return {"message": "API Ma Collection en ligne"}
