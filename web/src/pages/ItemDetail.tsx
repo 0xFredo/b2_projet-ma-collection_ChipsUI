@@ -13,17 +13,23 @@ export default function ItemDetail() {
   const [message, definirMessage] = useState<string | null>(null);
   const [erreurAjout, definirErreurAjout] = useState<string | null>(null);
   const [ajoutEnCours, definirAjoutEnCours] = useState(false);
+  const id = Number(itemId);
+  const identifiantInvalide =
+    !itemId || !Number.isInteger(id) || id < 1;
   useEffect(() => {
-    if (itemId)
-      api
-        .item(Number(itemId))
-        .then(definirItem)
-        .catch((cause) =>
-          definirErreur(
-            cause instanceof ErreurApi ? cause.message : "Fiche indisponible.",
-          ),
-        );
-  }, [itemId]);
+    if (identifiantInvalide) return;
+    api
+      .item(id)
+      .then((resultat) => {
+        definirErreur(null);
+        definirItem(resultat);
+      })
+      .catch((cause) =>
+        definirErreur(
+          cause instanceof ErreurApi ? cause.message : "Fiche indisponible.",
+        ),
+      );
+  }, [id, identifiantInvalide]);
 
   const ajouter = async () => {
     if (!item) return;
@@ -46,6 +52,15 @@ export default function ItemDetail() {
       definirAjoutEnCours(false);
     }
   };
+  if (identifiantInvalide)
+    return (
+      <main className="etat-page">
+        <p className="message-erreur">Identifiant d’item invalide.</p>
+        <Link to="/" className="bouton bouton-secondaire">
+          Retour au catalogue
+        </Link>
+      </main>
+    );
   if (erreur)
     return (
       <main className="etat-page">

@@ -4,9 +4,11 @@ import ItemCard from "../components/ItemCard";
 import { api, ErreurApi } from "../services/api";
 import type { Item, PaginatedItems } from "../types/api";
 import { useDebounce } from "../hooks/useDebounce";
+import { useAuth } from "../context/AuthContext";
 
 export default function Catalog() {
   const naviguer = useNavigate();
+  const { token } = useAuth();
   const [recherche, definirRecherche] = useState("");
   const rechercheDebitee = useDebounce(recherche, 400);
   const [categorie, definirCategorie] = useState("");
@@ -60,7 +62,7 @@ export default function Catalog() {
       .catch(() => undefined);
   }, []);
   const ajouter = async (item: Item) => {
-    if (!window.localStorage.getItem("token")) {
+    if (!token) {
       naviguer("/login");
       return;
     }

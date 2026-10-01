@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, ErreurApi } from "../services/api";
+import { useCollection } from "../context/CollectionContext";
 import type {
   CollectionEntry,
   Statut,
@@ -12,7 +13,7 @@ const libelles: Record<Statut, string> = {
   termine: "Terminées",
 };
 export default function Collection() {
-  const [entrees, definirEntrees] = useState<CollectionEntry[]>([]);
+  const { collection, definirCollection } = useCollection();
   const [statut, definirStatut] = useState("");
   const [tri, definirTri] = useState("date");
   const [chargement, definirChargement] = useState(true);
@@ -23,7 +24,7 @@ export default function Collection() {
         definirChargement(true);
         return api.listerCollection(statut || undefined, tri);
       })
-      .then(definirEntrees)
+      .then(definirCollection)
       .catch((cause) =>
         definirErreur(
           cause instanceof ErreurApi
@@ -32,14 +33,14 @@ export default function Collection() {
         ),
       )
       .finally(() => definirChargement(false));
-  }, [statut, tri]);
+  }, [definirCollection, statut, tri]);
   useEffect(() => {
     charger();
   }, [charger]);
   const supprimer = async (id: number) => {
     try {
       await api.supprimerCollection(id);
-      definirEntrees(entrees.filter((entree) => entree.id !== id));
+      definirCollection(collection.filter((entree) => entree.id !== id));
     } catch (cause) {
       definirErreur(
         cause instanceof ErreurApi ? cause.message : "Suppression impossible.",
@@ -52,8 +53,8 @@ export default function Collection() {
   ) => {
     try {
       const miseAJour = await api.modifierCollection(entree.id, changements);
-      definirEntrees(
-        entrees.map((element) =>
+      definirCollection(
+        collection.map((element) =>
           element.id === entree.id ? miseAJour : element,
         ),
       );
@@ -76,7 +77,7 @@ export default function Collection() {
           </p>
         </div>
         <div className="compteur">
-          <strong>{entrees.length}</strong>
+          <strong>{collection.length}</strong>
           <span>
             paquets
             <br />
@@ -109,7 +110,7 @@ export default function Collection() {
             Réessayer
           </button>
         </div>
-      ) : !entrees.length ? (
+      ) : !collection.length ? (
         <div className="etat-page vide-collection">
           <span>✳</span>
           <h2>Votre collection est encore vide.</h2>
@@ -117,7 +118,7 @@ export default function Collection() {
         </div>
       ) : (
         <div className="liste-collection">
-          {entrees.map((entree) => (
+          {collection.map((entree) => (
             <article className="ligne-collection" key={entree.id}>
               <div className="item-image item-image--mini">
                 {entree.item.image_url ? (
