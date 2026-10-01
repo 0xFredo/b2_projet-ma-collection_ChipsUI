@@ -17,9 +17,11 @@ export default function Catalog() {
   const [ajout, definirAjout] = useState<string | null>(null);
   const [categories, definirCategories] = useState<string[]>([]);
   useEffect(() => {
+    let requeteActive = true;
     void Promise.resolve()
       .then(() => {
         definirChargement(true);
+        definirErreur(null);
         return api.listerItems({
           q: rechercheDebitee || undefined,
           categorie: categorie || undefined,
@@ -27,15 +29,23 @@ export default function Catalog() {
           limit: 12,
         });
       })
-      .then(definirDonnees)
+      .then((resultat) => {
+        if (requeteActive) definirDonnees(resultat);
+      })
       .catch((cause) =>
+        requeteActive &&
         definirErreur(
           cause instanceof ErreurApi
             ? cause.message
             : "Catalogue indisponible.",
         ),
       )
-      .finally(() => definirChargement(false));
+      .finally(() => {
+        if (requeteActive) definirChargement(false);
+      });
+    return () => {
+      requeteActive = false;
+    };
   }, [rechercheDebitee, categorie, page]);
   useEffect(() => {
     void api
