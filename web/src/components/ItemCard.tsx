@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { Item } from "../types/api";
 
@@ -8,11 +9,19 @@ export default function ItemCard({
   item: Item;
   ajouter?: (item: Item) => void;
 }) {
+  const [imageDisponible, definirImageDisponible] = useState(true);
+
   return (
     <article className="carte-item">
       <div className="item-image">
-        {item.image_url ? (
-          <img src={item.image_url} alt={item.titre} />
+        {item.image_url && imageDisponible ? (
+          <img
+            src={item.image_url}
+            alt={item.titre}
+            loading="lazy"
+            decoding="async"
+            onError={() => definirImageDisponible(false)}
+          />
         ) : (
           <span>✳</span>
         )}
