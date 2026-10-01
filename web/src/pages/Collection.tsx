@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, ErreurApi } from "../services/api";
-import type { CollectionEntry, Statut } from "../types/api";
+import type {
+  CollectionEntry,
+  Statut,
+  UpdateEntryPayload,
+} from "../types/api";
 
 const libelles: Record<Statut, string> = {
   a_decouvrir: "À découvrir",
@@ -44,14 +48,10 @@ export default function Collection() {
   };
   const modifier = async (
     entree: CollectionEntry,
-    nouveauStatut: Statut,
-    nouvelleNote: number | null,
+    changements: UpdateEntryPayload,
   ) => {
     try {
-      const miseAJour = await api.modifierCollection(entree.id, {
-        statut: nouveauStatut,
-        ...(nouvelleNote ? { note: nouvelleNote } : {}),
-      });
+      const miseAJour = await api.modifierCollection(entree.id, changements);
       definirEntrees(
         entrees.map((element) =>
           element.id === entree.id ? miseAJour : element,
@@ -135,11 +135,7 @@ export default function Collection() {
                 <select
                   value={entree.statut}
                   onChange={(e) =>
-                    modifier(
-                      entree,
-                      e.target.value as Statut,
-                      entree.note ?? null,
-                    )
+                    modifier(entree, { statut: e.target.value as Statut })
                   }
                 >
                   <option value="a_decouvrir">À découvrir</option>
@@ -155,11 +151,9 @@ export default function Collection() {
                   aria-label="Note"
                   value={entree.note ?? ""}
                   onChange={(e) =>
-                    modifier(
-                      entree,
-                      entree.statut,
-                      e.target.value ? Number(e.target.value) : null,
-                    )
+                    modifier(entree, {
+                      note: e.target.value ? Number(e.target.value) : null,
+                    })
                   }
                 >
                   <option value="">Noter</option>

@@ -54,7 +54,7 @@ export interface CreateEntryPayload {
 
 export interface UpdateEntryPayload {
   statut?: Statut;
-  note?: number;
+  note?: number | null;
   commentaire?: string;
 }
 
