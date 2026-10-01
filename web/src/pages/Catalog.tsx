@@ -15,6 +15,7 @@ export default function Catalog() {
   const [chargement, definirChargement] = useState(true);
   const [erreur, definirErreur] = useState<string | null>(null);
   const [ajout, definirAjout] = useState<string | null>(null);
+  const [categories, definirCategories] = useState<string[]>([]);
   useEffect(() => {
     void Promise.resolve()
       .then(() => {
@@ -36,6 +37,18 @@ export default function Catalog() {
       )
       .finally(() => definirChargement(false));
   }, [rechercheDebitee, categorie, page]);
+  useEffect(() => {
+    void api
+      .listerItems({ page: 1, limit: 50 })
+      .then((resultat) => {
+        definirCategories(
+          Array.from(
+            new Set(resultat.results.map((item) => item.categorie)),
+          ),
+        );
+      })
+      .catch(() => undefined);
+  }, []);
   const ajouter = async (item: Item) => {
     if (!window.localStorage.getItem("token")) {
       naviguer("/login");
@@ -51,9 +64,6 @@ export default function Catalog() {
     }
     window.setTimeout(() => definirAjout(null), 3000);
   };
-  const categories = Array.from(
-    new Set(donnees?.results.map((item) => item.categorie) ?? []),
-  );
   const pages = donnees ? Math.ceil(donnees.total / donnees.limit) : 0;
   return (
     <>
