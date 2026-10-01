@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { api, ErreurApi } from "../services/api";
 import type { Item } from "../types/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function ItemDetail() {
+  const { token } = useAuth();
+  const naviguer = useNavigate();
   const { itemId } = useParams();
   const [item, definirItem] = useState<Item | null>(null);
   const [erreur, definirErreur] = useState<string | null>(null);
+  const [message, definirMessage] = useState<string | null>(null);
+  const [erreurAjout, definirErreurAjout] = useState<string | null>(null);
+  const [ajoutEnCours, definirAjoutEnCours] = useState(false);
   useEffect(() => {
     if (itemId)
       api
@@ -18,6 +24,28 @@ export default function ItemDetail() {
           ),
         );
   }, [itemId]);
+
+  const ajouter = async () => {
+    if (!item) return;
+    if (!token) {
+      naviguer("/login", { state: { destination: `/items/${item.id}` } });
+      return;
+    }
+
+    definirAjoutEnCours(true);
+    definirMessage(null);
+    definirErreurAjout(null);
+    try {
+      await api.ajouterCollection({ item_id: item.id, statut: "a_decouvrir" });
+      definirMessage("Cet élément a rejoint votre collection.");
+    } catch (cause) {
+      definirErreurAjout(
+        cause instanceof ErreurApi ? cause.message : "Ajout impossible.",
+      );
+    } finally {
+      definirAjoutEnCours(false);
+    }
+  };
   if (erreur)
     return (
       <main className="etat-page">
@@ -47,9 +75,15 @@ export default function ItemDetail() {
           <h1>{item.titre}</h1>
           <span className="annee">{item.annee}</span>
           <p>{item.description}</p>
-          <button className="bouton bouton-primaire">
-            Ajouter à ma collection
+          <button
+            className="bouton bouton-primaire"
+            onClick={ajouter}
+            disabled={ajoutEnCours}
+          >
+            {ajoutEnCours ? "Ajout..." : "Ajouter à ma collection"}
           </button>
+          {message && <p className="message-succes">{message}</p>}
+          {erreurAjout && <p className="message-erreur">{erreurAjout}</p>}
         </div>
       </div>
     </section>
