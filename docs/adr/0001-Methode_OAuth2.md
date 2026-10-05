@@ -2,7 +2,7 @@
 
 ## Statut
 
-Accepté
+Obsolete / Remplacé par [ADR 0003](0003-authentification-choix-et-comparatif.md)
 
 ## Contexte
 
