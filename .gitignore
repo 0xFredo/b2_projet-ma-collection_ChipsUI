@@ -42,7 +42,3 @@ venv/
 __pycache__/
 *.pyc
 *.pyo
-
-# Base de données SQLite locale (générée automatiquement sur chaque machine)
-*.db
-*.sqlite3

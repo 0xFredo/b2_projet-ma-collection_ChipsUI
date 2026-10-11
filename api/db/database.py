@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from sqlmodel import SQLModel
 from core.config import settings
 
-# Configuration du moteur pour PostgreSQL (sans connect_args SQLite)
+# Configuration du moteur pour PostgreSQL
 engine = create_async_engine(
     settings.DATABASE_URL, 
     echo=True, 
