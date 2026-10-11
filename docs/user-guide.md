@@ -68,6 +68,12 @@ Rendez-vous dans l'onglet "Statistiques" : ici vous avez accès à une palette d
 
 ## Foire Aux Questions (FAQ)
 
+### Q : Erreur "`no configuration file provided: not found`"
+**R :** Assurez vous d'avoir bien ouvert le terminal depuis le dossier racine du projet.
+
+### Q : Erreur "`failed to connect to the docker API`"
+**R :** Assurez vous que Docker Desktop est bien ouvert et à jour.
+
 ### Q : J'ai oublié mon mot de passe, que puis-je faire ?
 **R :** La réinitialisation automatique du mot de passe n'est pas encore disponible. Veuillez créer un nouveau compte.
 
