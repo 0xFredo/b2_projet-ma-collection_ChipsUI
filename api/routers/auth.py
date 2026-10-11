@@ -32,7 +32,7 @@ async def register(
     Inscrit un nouvel utilisateur dans le système.
 
     - **user_data**: Données de création de l'utilisateur (email, mot de passe, etc.).
-    - **session**: Session active de la base de données SQLite.
+    - **session**: Session active de la base de données PostgreSQL.
 
     **Déroulement :**
     1. Vérifie si l'adresse e-mail existe déjà en base de données.

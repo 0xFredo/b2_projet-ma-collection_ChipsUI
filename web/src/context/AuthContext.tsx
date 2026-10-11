@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { User } from '../types/api'
 import { api, ErreurApi } from '../services/api'
 import { useLocalStorage } from '../hooks/useLocalStorage'
@@ -9,6 +9,7 @@ interface AuthContextValue {
 	utilisateur: User | null
 	chargement: boolean
 	erreur: string | null
+	effacerErreur: () => void
 	connexion: (email: string, motDePasse: string) => Promise<void>
 	inscription: (email: string, motDePasse: string) => Promise<void>
 	deconnexion: () => void
@@ -53,8 +54,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		catch (cause) { definirErreur(cause instanceof ErreurApi ? cause.message : 'Inscription impossible.'); throw cause }
 	}
 
+	const effacerErreur = useCallback(() => definirErreur(null), [])
 	const deconnexion = () => { definirToken(null); definirUtilisateur(null) }
-	return <AuthContext.Provider value={{ token, utilisateur, chargement, erreur, connexion, inscription, deconnexion }}>{children}</AuthContext.Provider>
+	return <AuthContext.Provider value={{ token, utilisateur, chargement, erreur, effacerErreur, connexion, inscription, deconnexion }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth(): AuthContextValue {

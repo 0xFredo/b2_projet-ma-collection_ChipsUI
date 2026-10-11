@@ -15,7 +15,6 @@ class CollectionEntry(SQLModel, table=True):
     
     statut: str = Field(default="a_decouvrir")  # "a_decouvrir", "en_cours", "termine"
     note: Optional[int] = Field(default=None)   # 1 à 5
-    commentaire: Optional[str] = Field(default=None)
     date_ajout: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     # Relations

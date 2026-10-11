@@ -130,9 +130,6 @@ export default function Collection() {
               <div className="ligne-infos">
                 <span className="etiquette">{libelles[entree.statut]}</span>
                 <h2>{entree.item.titre}</h2>
-                <p>
-                  {entree.commentaire || "Aucun commentaire pour le moment."}
-                </p>
                 <select
                   value={entree.statut}
                   onChange={(e) =>
