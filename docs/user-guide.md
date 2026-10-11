@@ -66,4 +66,16 @@ Rendez-vous dans l'onglet "Statistiques" : ici vous avez accès à une palette d
 | **Purger toutes les données** | `docker compose down -v` | Supprime les fichiers **et** réinitialise la base de données.             |
 | **Voir les logs**             | `docker compose logs -f` | Affiche les logs en temps réel pour une résolution de bugs.               |
 
-## FAQ
+## Foire Aux Questions (FAQ)
+
+### Q : J'ai oublié mon mot de passe, que puis-je faire ?
+**R :** La réinitialisation automatique du mot de passe n'est pas encore disponible. Veuillez créer un nouveau compte.
+
+### Q : Mes données sont-elles enregistrées si je ferme mon navigateur ?
+**R :** Oui, toutes vos données (collection, notes, statuts) sont sauvegardées sur votre compte en base de données. Vous les retrouverez dès votre prochaine connexion.
+
+### Q : Puis-je partager ma collection avec un autre utilisateur ?
+**R :** Actuellement, votre collection est strictement personnelle et liée à votre compte. La fonctionnalité de partage public n'est pas encore crée.
+
+### Q : Comment changer la note ou le statut d'un élément déjà ajouté ?
+**R :** Il vous suffit de vous rendre sur votre tableau de bord, de repérer l'élément souhaité et de cliquer sur le bouton de modification pour mettre à jour vos informations.
