@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -8,13 +8,17 @@ interface EtatConnexion {
 }
 
 export default function Login() {
-  const { connexion, erreur } = useAuth();
+  const { connexion, erreur, effacerErreur } = useAuth();
   const naviguer = useNavigate();
   const emplacement = useLocation();
   const etat = emplacement.state as EtatConnexion | null;
   const [email, definirEmail] = useState("");
   const [motDePasse, definirMotDePasse] = useState("");
   const [envoi, definirEnvoi] = useState(false);
+  useEffect(() => {
+    effacerErreur();
+  }, [effacerErreur]);
+
   const soumettre = async (evenement: FormEvent) => {
     evenement.preventDefault();
     definirEnvoi(true);

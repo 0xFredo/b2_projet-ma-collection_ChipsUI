@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
-  const { inscription, erreur } = useAuth();
+  const { inscription, erreur, effacerErreur } = useAuth();
   const naviguer = useNavigate();
   const [email, definirEmail] = useState("");
   const [motDePasse, definirMotDePasse] = useState("");
@@ -22,7 +22,8 @@ export default function Register() {
       await inscription(email, motDePasse);
       naviguer("/");
     } catch {
-      definirMessage("Impossible de créer le compte pour le moment.");
+      // L'erreur détaillée est fournie par le contexte, notamment pour un email déjà utilisé.
+      definirMessage(null);
     } finally {
       definirEnvoi(false);
     }
@@ -68,8 +69,8 @@ export default function Register() {
             required
           />
         </label>
-        {(message || erreur) && (
-          <p className="message-erreur">{message || erreur}</p>
+        {(erreur || message) && (
+          <p className="message-erreur">{erreur || message}</p>
         )}
         <button
           className="bouton bouton-primaire bouton-large"
@@ -78,7 +79,10 @@ export default function Register() {
           {envoi ? "Création..." : "Créer mon compte"}
         </button>
         <p className="aide-formulaire">
-          Déjà inscrit ? <Link to="/login">Se connecter</Link>
+          Déjà inscrit ?{" "}
+          <Link to="/login" onClick={effacerErreur}>
+            Se connecter
+          </Link>
         </p>
       </form>
     </section>
