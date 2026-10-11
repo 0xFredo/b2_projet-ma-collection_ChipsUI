@@ -2,10 +2,16 @@ import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+interface EtatConnexion {
+  destination?: string;
+  message?: string;
+}
+
 export default function Login() {
   const { connexion, erreur } = useAuth();
   const naviguer = useNavigate();
   const emplacement = useLocation();
+  const etat = emplacement.state as EtatConnexion | null;
   const [email, definirEmail] = useState("");
   const [motDePasse, definirMotDePasse] = useState("");
   const [envoi, definirEnvoi] = useState(false);
@@ -14,7 +20,7 @@ export default function Login() {
     definirEnvoi(true);
     try {
       await connexion(email, motDePasse);
-      naviguer(emplacement.state?.destination ?? "/");
+      naviguer(etat?.destination ?? "/");
     } catch {
       /* erreur affichée par le contexte */
     } finally {
@@ -52,6 +58,11 @@ export default function Login() {
             required
           />
         </label>
+        {etat?.message && (
+          <p className="message-erreur" role="alert">
+            {etat.message}
+          </p>
+        )}
         {erreur && <p className="message-erreur">{erreur}</p>}
         <button
           className="bouton bouton-primaire bouton-large"
