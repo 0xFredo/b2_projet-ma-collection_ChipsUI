@@ -2,7 +2,7 @@
 
 import './styles.css'
 
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import { AuthProvider } from './context/AuthContext';
 import { CollectionProvider } from './context/CollectionContext';
@@ -13,6 +13,7 @@ import Catalog from './pages/Catalog';
 import Collection from './pages/Collection';
 import Stats from './pages/Stats';
 import ItemDetail from './pages/ItemDetail';
+import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function AppRoutes() {
@@ -28,7 +29,7 @@ export default function AppRoutes() {
             <Route path="/collection" element={<Collection />} />
             <Route path="/stats" element={<Stats />} />
           </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes></CollectionProvider></AuthProvider>
     </BrowserRouter>
