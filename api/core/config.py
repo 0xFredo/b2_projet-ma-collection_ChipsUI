@@ -14,8 +14,7 @@ class Settings(BaseSettings):
     # Sécurité & JWT (HS256)
     SECRET_KEY: str = Field(..., min_length=32) # 32 caracteres minimum
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # Durée de validité du jeton JWT (24 heures)
-
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 # Durée de validité du jeton JWT 1h
     # Indique à Pydantic de lire le fichier .env et d'ignorer les variables en trop
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
