@@ -13,20 +13,17 @@ class CollectionEntryCreate(BaseModel):
     item_id: int
     statut: StatutType = "a_decouvrir"
     note: int | None = Field(None, ge=1, le=5)
-    commentaire: str | None = None
 
 # Données optionnelles pour la modification partielle d'une entrée (PATCH /me/collection/{entry_id})
 class CollectionEntryUpdate(BaseModel):
     statut: StatutType | None = None
     note: int | None = Field(None, ge=1, le=5)
-    commentaire: str | None = None
 
 # Données renvoyées par l'API pour une entrée avec l'objet Item imbriqué
 class CollectionEntryRead(BaseModel):
     id: int
     statut: StatutType
     note: int | None = Field(None, ge=1, le=5)
-    commentaire: str | None = None
     date_ajout: datetime
     item: ItemRead # Modele Item récupéré
 

@@ -91,8 +91,7 @@ async def add_to_collection(
         user_id=current_user.id,
         item_id=entry_data.item_id,
         statut=entry_data.statut,
-        note=entry_data.note,
-        commentaire=entry_data.commentaire
+        note=entry_data.note
     )
 
     session.add(new_entry)
@@ -115,7 +114,7 @@ async def update_collection_entry(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Met à jour le statut, la note ou le commentaire d'un élément de sa collection.
+    Met à jour le statut ou la note d'un élément de sa collection.
     """
     statement = (
         select(CollectionEntry)
